@@ -1,31 +1,30 @@
 var Node = function (val, path, parent) {
-	this.path = path || "";
-	this.parent = parent;
-	this.node = val;
-};
+		this.path = path || "";
+		this.parent = parent;
+		this.node = val;
+	},
+	ResultSet = function () {
+		this.set = [];
+	};
 
 var traverse = exports.traverse = function (match, object) {
 	var output = [],
 		traverse = [],
 		separator = "\n",
-		nodeCount = 0,
 		root = new Node(object),
 		process = function (object) {			
 			if (object.node instanceof Object || object.node instanceof Array)
-				for (var i in object.node) {
+				for (var i in object.node)
 					traverse.push(new Node(object.node[i], object.path + separator + i, object));
-					nodeCount++;
-				}
 		};
 	
 	process(root);	
-	while (nodeCount > 0 ) {
+	while (traverse.length > 0) {
 		// console.log("processing: ", traverse[0].path.split(separator).join("/"), traverse[0].node, nodeCount, careful);
 		if (traverse[0].path.split(separator).slice(-1)[0] == match) output.push(traverse[0]);
 		process(traverse[0]);
 		
 		traverse.shift();
-		nodeCount--;
 	}
 	
 	return output;
