@@ -1,3 +1,5 @@
+// via: http://www.w3.org/TR/xpath/#NT-AbbreviatedAbsoluteLocationPath
+
 start
 	= xpath:xpath { return xpath; }
 	
@@ -11,14 +13,46 @@ LocationPath
 	/ AbsoluteLocationPath
 
 AbsoluteLocationPath
-	= AbbreviatedAbsoluteLocationPath
-	/ "/" RelativeLocationPath?
-	
-AbbreviatedAbsoluteLocationPath
-	= "//" RelativeLocationPath
-	
-AbbreviatedRelativeLocationPath
-	= RelativeLocationPath "//" Step
+	= "//" absolutePath:RelativeLocationPath? {
+		var paths = [],
+			first = absolutePath.shift();
+			
+		paths.push({
+			name: "path",
+			type: "absolute",
+			step: first
+		});
+			
+		for (var i in absolutePath) {
+			var v = absolutePath[i];
+			paths.push({
+				name: "path",
+				type: v[0] == "/" ? "relative" : "absolute",
+				step: v[1]
+			});
+		}
+		return paths;
+	}
+	/ "/" relativePath:RelativeLocationPath? {
+		var paths = [],
+			first = relativePath.shift();
+		
+		paths.push({
+			name: "path",
+			type: "relative",
+			step: first
+		});
+		
+		for (var i in relativePath) {
+			var v = relativePath[i];
+			paths.push({
+				name: "path",
+				type: v[0] == "/" ? "relative" : "absolute",
+				step: v[1]
+			});
+		}
+		return paths;
+	}
 
 AbbreviatedStep
 	= "."
@@ -26,17 +60,22 @@ AbbreviatedStep
 	
 AbbreviatedAxisSpecifier
 	= "@"?
-	
-//RelativeLocationPath
-//	= Step
-//	/ RelativeLocationPath "/" Step
-//	/ AbbreviatedRelativeLocationPath
 
 RelativeLocationPath
-	= Step (("/" / "//") Step)*
+	= firstNode:Step restNodes:(("/" / "//") Step)* {
+		restNodes.unshift(firstNode);
+		return restNodes;
+	}
 	
 Step
-	= AxisSpecifier NodeTest Predicate*
+	= specifier:AxisSpecifier test:NodeTest predicates:(Predicate*) {
+		return {
+			name: "step",
+			specifier: specifier,
+			test: test,
+			predicates: predicates 
+		};
+	}
 	/ AbbreviatedStep
 	
 AxisSpecifier
@@ -64,7 +103,21 @@ NodeTest
 	/ "processing-instruction" "(" Literal ")"
 	
 Predicate
-	= "[" PredicateExpr "]"
+	// easier for now
+	= "[" path:QName op:('=' / '!=' / '<' / '<=' / '>') compare:QName "]" {
+		return {
+			name: "predicate",
+			path: path,
+			operator: op,
+			expr: compare
+		}
+	}
+	/ "[" expr:PredicateExpr "]" {
+		return {
+			name: "predicate",
+			expr: expr
+		}
+	}
 
 PredicateExpr
 	= Expr
@@ -104,7 +157,13 @@ AndExpr
 	= EqualityExpr ("and" EqualityExpr)*
 	
 EqualityExpr
-	= RelationalExpr (("=" / "!=") RelationalExpr)*
+	= relation1:RelationalExpr relations:(("=" / "!=") RelationalExpr)* {
+		var relations = [];
+		return {
+			name: "relational",
+			relation: relation1
+		}
+	}
 	
 RelationalExpr
 	= AdditiveExpr (("<" / ">" / "<=" / ">=") AdditiveExpr)*
@@ -143,7 +202,7 @@ Digits
 Operator
 	= OperatorName
 	/ MultiplyOperator
-	/ '/' / '//' / '|' / '+' / '-' / '=' / '!=' / '<' / '<=' / '>' / 
+	/ '/' / '//' / '|' / '+' / '-' / '=' / '!=' / '<' / '<=' / '>' 
 
 OperatorName
 	= "and"
@@ -179,13 +238,18 @@ QName
 	= Name 
 
 NameStartChar 
-	= ":" / [A-Z] / "_" / [a-z] / [u00C0-u00D6] / [u00D8-u00F6] / [u00F8-u02FF] / [u0370-u037D] / [u037F-u1FFF] / [u200C-u200D] / [u2070-u218F] / [u2C00-u2FEF] / [u3001-uD7FF] / [uF900-uFDCF] / [uFDF0-uFFFD] / [u10000-uEFFFF] 
+	= ":" / [A-Z] / "_" / [a-z] 
+	// one of these is grabbing square brackets, i'll figure it out later, burp...
+	// [u00C0-u00D6] / [u00D8-u00F6] / [u00F8-u02FF] / [u0370-u037D] / [u037F-u1FFF] / [u200C-u200D] / [u2070-u218F] / [u2C00-u2FEF] / [u3001-uD7FF] / [uF900-uFDCF] / [uFDF0-uFFFD] / [u10000-uEFFFF] 
 	
 NameChar 
-	= NameStartChar / "-" / "." / [0-9] / [u00B7] / [u0300-u036F] / [u203F-u2040] 
+	= NameStartChar / "-" / "." / [0-9] 
+	// [u00B7] / [u0300-u036F] / [u203F-u2040] 
 	
 Name 
-	= NameStartChar (NameChar)*
+	= nameStart:NameStartChar nameEnd:NameChar* {
+		return nameStart + nameEnd.join("");
+	}
 	
 FunctionName 
 	= XPath1CoreFunctions 
