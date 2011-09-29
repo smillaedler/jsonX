@@ -10,6 +10,7 @@ idea.
 right now, i'm aiming towards something like:
 
 	jsonx = require("jsonx");
+	
 	doc = new jsonx.doc({
 		some: {
 			xpath: {
