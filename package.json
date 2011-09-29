@@ -1,0 +1,34 @@
+{
+  "name": "jsonX",
+  "description": "a port of xpath for json",
+  "main": "./lib/jsonx.js",
+  "version": "0.1.0",
+  "author": "matt handler (http://github.com/matthandlersux)",
+  "keywords": ["parse", "json", "jsonx", "freddy", "freddy vs json", "xpath", "api"],
+  "repository": {
+        "type": "git",
+        "url": "git@github.com:matthandlersux/jsonX.git"
+   },
+  "engines": { "node": ">= 0.1.100" },
+  "licenses": [
+     {
+        "type": "MIT"
+     }
+  ],
+  "bugs": {
+    "web" : "https://github.com/matthandlersux/jsonX/issues"
+  },
+  "scripts": {
+    "rebuild-parser": "make parser",
+    "test": "make test"
+  },
+  "devDependencies": {
+    "pegjs": "0.6.2",
+	"vows": "0.5.11",
+	"should": "0.3.1"
+  },
+  "contributors": [
+	"matt handler <matt.handler@gmail.com> (http://www.matthandler.com/)",
+    "harold cooper <hrldcpr@gmail.com> (http://syzygy.st/)"
+  ]
+}
