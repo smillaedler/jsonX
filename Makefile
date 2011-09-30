@@ -1,22 +1,21 @@
-
-ALL_TESTS = $(shell find test/ -name '*.test.js')
-
-run-tests:
-	@env NODE_ENV=test vows --spec test/*.test.js
-
-build-parser:
-	@./node_modules/pegjs/bin/pegjs ./lib/parser/xpath.pegjs ./lib/parser/xpath.js
+NAME = *
 
 test:
 	@$(MAKE) run-tests
 
 parser:
 	@$(MAKE) build-parser
+	
+run-tests:
+	@env NODE_ENV=test vows --spec test/$(NAME).test.js
 
-test-cov:
-	@TESTFLAGS=--cov $(MAKE) test
+build-parser:
+	@./node_modules/pegjs/bin/pegjs ./lib/parser/xpath.pegjs ./lib/parser/xpath.js	
 
+# maybe useful later, probs not though:
+# 	
 # test-leaks:
 # 	@ls test/leaks/* | xargs node --expose_debug_as=debug --expose_gc
+# 
 
 .PHONY: test

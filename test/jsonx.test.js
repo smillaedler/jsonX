@@ -1,19 +1,19 @@
 var common = require("./common"),
 	vows = require("vows"),
 	should = require("should"),
-	x = require("../lib/jsonx");
+	jsonx = require("../lib/jsonx");
 	
 require("./fixtures/jsonx.test.fixture");
 	
 vows.describe('jsonX').addBatch({
 	'when': {
-		'searching for a simple path': {
+		'using a simple object': {
 			topic: function () {
-				return new x.path("//node/test/here");
+				return new jsonx.Doc(SimpleSearch);
 			},
-			'applied to an object': {
-				topic: function (jsonx) {
-					return jsonx.exec(SimpleSearch);
+			'an xpath finds nodes': {
+				topic: function (doc) {
+					return doc.xpath("//node/test/here");
 				},
 				'we get two results': function (resultSet) {
 					resultSet.length.should.equal(2);
@@ -21,9 +21,9 @@ vows.describe('jsonX').addBatch({
 					resultSet[1].node.should.equal("yay two!");
 				}
 			},
-			'applied to the wrong object': {
-				topic: function (jsonx) {
-					return jsonx.exec(SimpleFail);
+			'an xpath fails to find nodes': {
+				topic: function (doc) {
+					return doc.xpath("//nonode/notest/fail");
 				},
 				'we get no results': function (resultSet) {
 					resultSet.length.should.equal(0);
@@ -32,11 +32,11 @@ vows.describe('jsonX').addBatch({
 		},
 		'searching for a path with a node test': {
 			topic: function () {
-				return new x.path("//node[match=match]");
+				return new jsonx.Doc(SimpleNodeTest);
 			},
 			'applied to an object': {
-				topic: function (jsonx) {
-					return jsonx.exec(SimpleNodeTest);
+				topic: function (doc) {
+					return doc.xpath("//node[match=match]");
 				},
 				'we get the matching node': function (resultSet) {
 					resultSet.length.should.equal(1);

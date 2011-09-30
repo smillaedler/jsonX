@@ -24,32 +24,6 @@ SimpleSearch = {
 	]
 };
 
-SimpleFail = {
-	first: {
-		node: {
-			test: {
-				fail: "yay"
-			}
-		}
-	},
-	fail: {
-		nothing: {
-			here: {
-				
-			}
-		}
-	},
-	hidden: [
-		{
-			node: {
-				test: {
-					fail: "yay two!"
-				}
-			}
-		}
-	]
-};
-
 SimpleNodeTest = {
 	first: {
 		node: {
