@@ -39,3 +39,16 @@ SimpleNodeTest = {
 		node: "match"
 	}
 }
+
+SiblingTest = {
+	first: [
+		{matchThing: "m1"},
+		{thing: "m2"},
+		{thing: "m3"}
+	],
+	second: {
+		thing1: "t1",
+		thing2: "t2",
+		thing3: "t3"
+	}
+}

@@ -59,6 +59,23 @@ vows.describe('jsonX').addBatch({
 					resultSet[0].node.node.match.should.equal("fail");
 				}
 			}
+		},
+		'searching for a path with a sibling axis': {
+			topic: function () {
+				return new jsonx.Doc(SiblingTest);
+			},
+			'we get siblings for an object': function (doc) {
+				var rs = doc.xpath("//thing1/sibling::*");
+				rs.length.should.equal(2);
+				should.equal(true, rs[0].key == "thing2" || rs[1].key == "thing2");
+				should.equal(true, rs[0].key == "thing3" || rs[1].key == "thing3");
+			},
+			'we get siblings for arrays': function (doc) {
+				var rs = doc.xpath("//matchThing/sibling::*");
+				rs.length.should.equal(2);
+				rs[0].node.thing.should.equal("m2");
+				rs[1].node.thing.should.equal("m3");
+			}
 		}
 	}
 }).export(module);
