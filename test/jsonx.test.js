@@ -54,7 +54,9 @@ vows.describe('jsonX').addBatch({
 					return doc.xpath("//node/parent::second");
 				},
 				'successfully': function (resultSet) {
-					console.log(resultSet);
+					resultSet.length.should.equal(1);
+					resultSet[0].key.should.equal("second");
+					resultSet[0].node.node.match.should.equal("fail");
 				}
 			}
 		}
