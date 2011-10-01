@@ -44,6 +44,19 @@ vows.describe('jsonX').addBatch({
 					resultSet[0].node.match.should.equal("match");
 				}
 			}
+		},
+		'searching for a path with an axis': {
+			topic: function () {
+				return new jsonx.Doc(SimpleNodeTest);
+			},
+			'we can get parents': {
+				topic: function (doc) {
+					return doc.xpath("//node/parent::second");
+				},
+				'successfully': function (resultSet) {
+					console.log(resultSet);
+				}
+			}
 		}
 	}
 }).export(module);
