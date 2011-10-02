@@ -75,6 +75,43 @@ vows.describe('jsonX').addBatch({
 				rs.length.should.equal(2);
 				rs[0].node.thing.should.equal("m2");
 				rs[1].node.thing.should.equal("m3");
+			},
+			'we get following-siblings for arrays': function (doc) {
+				var rs = doc.xpath("//matchThing2/following-sibling::*");
+				rs.length.should.equal(2);
+				rs[0].node.thing.should.equal("s3");
+				rs[1].node.thing.should.equal("s4");				
+			}
+		},
+		'searching for a path with a vertical axis': {
+			topic: function () {
+				return new jsonx.Doc(VerticalTest);
+			},
+			'we get ancestors': function (doc) {
+				var rs = doc.xpath("//here/ancestor::*");
+				rs.length.should.equal(5);
+				var keys = common.allKeys(rs);
+				keys.should.contain('thing');
+				keys.should.contain('first');
+				keys.should.not.contain('second');
+				keys.should.contain('third');
+				keys.should.contain('0');
+				keys.should.not.contain('here');
+			},
+			'we get ancestors-and-self': function (doc) {
+				var rs = doc.xpath("//here/ancestor-or-self::*");
+				rs.length.should.equal(7);
+				var keys = common.allKeys(rs);
+				keys.should.contain('here');
+			},
+			'we get descendants': function (doc) {
+				var rs = doc.xpath("//second/descendant::*");
+				rs.length.should.equal(2);
+				should.equal("t2", rs[1].node);
+			},
+			'we get descendant-and-self': function (doc) {
+				var rs = doc.xpath("//second/descendant-or-self::*");
+				rs.length.should.equal(3);
 			}
 		}
 	}

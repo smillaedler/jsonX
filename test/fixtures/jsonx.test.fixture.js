@@ -50,5 +50,29 @@ SiblingTest = {
 		thing1: "t1",
 		thing2: "t2",
 		thing3: "t3"
-	}
+	},
+	third: [
+		{thing: "s1"},
+		{matchThing2: "s2"},
+		{thing: "s3"},
+		{thing: "s4"}
+	]
+}
+
+VerticalTest = {
+	first: {
+		thing: {
+			here: "t1"
+		}
+	},
+	second: {
+		thang: {
+			there: "t2"
+		}
+	},
+	third: [
+		{thing: {
+			here: "t3"
+		}}
+	]
 }
