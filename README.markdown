@@ -9,21 +9,22 @@ idea.
 
 right now, i'm aiming towards something like:
 
-	jsonx = require("jsonx");
+```javascript
+var jsonx = require("jsonx");
 	
-	doc = new jsonx.doc({
-		some: {
-			xpath: {
-				statement: {
-					coolness: "very"
-				}
+doc = new jsonx.doc({
+	some: {
+		xpath: {
+			statement: {
+				coolness: "very"
 			}
 		}
-	});
-	doc.xpath("//some/xpath/statement[@coolness=very]");
-	
-	// returns {statement: {coolness: "very"}}
-	
+	}
+});
+doc.xpath("//some/xpath/statement[@coolness=very]");
+
+// returns {statement: {coolness: "very"}}
+```
 i still haven't decided what to do about the big difference between XML and JSON, mainly attributes/vs no attributes.
 feel free to chat with me about it.	
 
